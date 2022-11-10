@@ -14,7 +14,8 @@ export default createStore({
       'community'
     ],
     events: [],
-    eventsTotal: 0
+    eventsTotal: 0,
+    event: []
   },
   mutations: {
     ADD_EVENT(state, event) {
@@ -26,6 +27,9 @@ export default createStore({
     },
     SET_EVENTS_TOTAL(state, eventsTotal) {
       state.eventsTotal = eventsTotal
+    },
+    SET_EVENT(state, event) {
+      state.event = event
     }
   },
   actions: {
@@ -47,6 +51,24 @@ export default createStore({
         .catch(error => {
           console.log(error)
         })
+    },
+    // get event
+    fetchEvent({ commit, getters }, { id }) {
+      const event = getters.getEventById(id)
+      console.log(event)
+
+      if (event) {
+        commit('SET_EVENT', event)
+      } else {
+        EventService.getEvent(id)
+          .then(response => {
+            console.log(response.data)
+            commit('SET_EVENT', response.data)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      }
     }
   },
   getters: {
