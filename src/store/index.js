@@ -18,6 +18,10 @@ export default createStore({
   mutations: {
     ADD_EVENT(state, event) {
       state.events.push(event)
+    },
+    // 4. set event to state
+    SET_EVENTS(state, events) {
+      state.events = events
     }
   },
   actions: {
@@ -25,6 +29,16 @@ export default createStore({
       return EventService.postEvent(event).then(() => {
         commit('ADD_EVENT', event)
       })
+    },
+    //3. call fetch event
+    fetchEvents({ commit }) {
+      EventService.getEvents()
+        .then(response => {
+          commit('SET_EVENTS', response.data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   },
   getters: {
